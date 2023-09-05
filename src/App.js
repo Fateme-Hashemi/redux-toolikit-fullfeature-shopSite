@@ -6,22 +6,23 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Main from "../src/components/Main/Main"
 import FilteredProducts from './components/FilteredProducts/FilteredProducts';
 import SingleProduct from './components/FilteredProducts/SingleProduct';
+import LoginCard from './components/Login/LoginCard';
+
+
 
 const App = () => {
 
-  const cart = useSelector((state)=> state.cart.cart)
-  const price = useSelector((state)=> state.cart.totalPrice)
-  const amount = useSelector((state)=> state.cart.totalAmount)
+  const user = useSelector((state) => state.user.user)
+  const {authUser} = user;
+  console.log("user", user)
+  console.log("auth", authUser)
 
-  console.log("cart", cart)
-  console.log("price", price)
-  console.log("amount" , amount)
 
     return (
       <BrowserRouter>
      
-        <Switch>
-      <Route exact path="/" component={Main} />
+      <Switch>
+      <Route exact path="/" component={authUser? Main : LoginCard} />
       <Route path="/products/:type" component={FilteredProducts} />
       <Route path="/product/:type/:id" component={SingleProduct} />
       </Switch>

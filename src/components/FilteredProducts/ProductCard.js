@@ -10,6 +10,9 @@ import { useDispatch } from 'react-redux';
 import {Link} from "react-router-dom"
 import { singleProduct } from '../../features/Products/ProductsSlice';
 
+
+
+
 const ProductCard = ({id, name, img, price, gender,type, size, text, colors}) => {
 
     const dispatch= useDispatch();

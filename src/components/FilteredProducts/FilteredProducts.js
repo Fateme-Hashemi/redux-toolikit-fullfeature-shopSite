@@ -1,14 +1,30 @@
 import React from 'react';
-import { UseSelector, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import ProductCard from './ProductCard';
+import { Button } from '@material-tailwind/react';
+import {
+    Menu,
+    MenuHandler,
+    MenuList,
+    MenuItem,
+  } from "@material-tailwind/react";
+import { filterBySize, filterByColor, genderFilter, sortByPrice, filterProducts } from '../../features/Products/ProductsSlice';
+import Error from "../error/Error"
+
 
 const FilteredProducts = () => {
 
     const products = useSelector((state)=> state.products.filteredProducts)
+    const error =useSelector ((state)=> state.products.error)
     const {type} = useParams()
-    console.log("filter" ,products)
-    console.log("params" , type)
+ 
+
+    const genderButtons = ["male", "female"];
+    const colorButtons = ["red", "balck", "yellow", "purple", "green","gray"];
+    const sizeButtons = ["s", "M", "L", "XL"]
+
+    const dispatch = useDispatch()
 
     return (
         <div>
@@ -18,29 +34,140 @@ const FilteredProducts = () => {
                         {type}
                     </h1>
 
-                </div>
-                <div className="grid grid-cols-4 justify-items-center py-8 gap-12 ">
-                 {products.filter((product)=> product.type === type).map((product, index)=> {
-                    return (
-                   <div key={product.id}>
-                         <ProductCard
-                        id={product.id}
-                       img={product.img}
-                       size={product.size}
-                       price={product.price}
-                       name={product.name}
-                       type={product.type}
-                       gender={product.gender}
-                       text={product.text}
-                       colors={product.colors}
-                    />
-                    </div>
-                    )
-                 })}
-                </div>
-           </div>
-        </div>
-    );
-};
+                    <div className="flex items-center justify-between py-8 ">
 
+                        <div className='flex items-center'>
+                            {genderButtons.map((item, index)=> {
+                                return (
+                                   <div key={index}>
+                                     <Button
+                                    color="gray"
+                                    size="lg"
+                                    variant="outlined"
+                                    ripple={true}
+                                    className="text-black hover:bg-gray-300 duration-300 ease-in-out mr-4"
+                                    onClick={()=> dispatch(genderFilter(item))}
+                                    >
+                                        {item}
+                                    </Button>
+                                   </div>
+                                )
+                            })}
+                    
+
+                            <Button
+                              color="gray"
+                              size="lg"
+                              variant="outlined"
+                              ripple={true}
+                              className="text-black hover:bg-gray-300 duration-300 ease-in-out mr-4"
+                              onClick={()=> dispatch(sortByPrice())}>
+                                Highest Price
+                            </Button>
+
+                            <Menu>
+                        <MenuHandler>
+                            <Button
+                             color="gray"
+                             size="lg"
+                              variant="outlined"
+                             ripple={true}
+                              className="text-black hover:bg-gray-300 duration-300 ease-in-out mr-4"
+                             
+                            >
+                             Select a color
+                            </Button>
+                            </MenuHandler>
+                            <MenuList>
+                             {colorButtons.map((item, index) => {
+                              return (
+                                 <MenuItem
+                                 style={{ color: item }}
+                                 key={index}
+                                 onClick={()=> dispatch(filterByColor(item))}
+                                >
+                                    {item}
+                                 </MenuItem>
+                             );
+                             })}
+                            </MenuList>
+                         </Menu>
+                              
+                         <Menu>
+                        <MenuHandler>
+                            <Button
+                            disabled={type=== "Bags" || type=== "Shoes"}
+                             color="gray"
+                             size="lg"
+                              variant="outlined"
+                             ripple={true}
+                              className="text-black hover:bg-gray-300 duration-300 ease-in-out mr-4"
+                          
+                            >
+                             Select a size
+                            </Button>
+                            </MenuHandler>
+                            <MenuList>
+                             {sizeButtons.map((item, index) => {
+                              return (
+                                 <MenuItem
+                                 key={index}
+                                 onClick={()=> dispatch(filterBySize(item))}
+                        
+                                >
+                                    {item}
+                                 </MenuItem>
+                             );
+                             })}
+                            </MenuList>
+                         </Menu>
+                         </div>
+
+                        <div className='pr-8'>
+                        <Button
+                              color="gray"
+                              size="lg"
+                              variant="outlined"
+                              ripple={true}
+                              className="text-black hover:bg-gray-300 duration-300 ease-in-out mr-4"
+                              onClick={()=> dispatch(filterProducts(type))}>
+                               Clear Filter
+                            </Button>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                {error ? (
+          <Error></Error>
+        ) : (
+          <div className="grid grid-cols-4 justify-items-center py-8 gap-12 ">
+            {products
+              .filter((product) => product.type === type)
+              .map((product, index) => {
+                return (
+                  <div key={index} className="">
+                    <ProductCard
+                      id={product.id}
+                      name={product.name}
+                      text={product.text}
+                      img={product.img}
+                      price={product.price}
+                      colors={product.color}
+                    ></ProductCard>
+                  </div>
+                );
+              })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 export default FilteredProducts;
+
+
+
+   
+

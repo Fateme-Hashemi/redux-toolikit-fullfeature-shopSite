@@ -3,7 +3,8 @@ import React from 'react';
 import Navbar from "../Navbar/Navbar"
 import Slide from '../Slide/Slide';
 import NavigationButoons from '../NavigationButtons/NavigationButoons';
-
+import ProductSection from '../productSection/ProductSection';
+import Footer from '../Footer/Footer';
 
 
 const Main = () => {
@@ -12,6 +13,8 @@ const Main = () => {
             <Navbar />
             <Slide />
             <NavigationButoons />
+            <ProductSection />
+            <Footer />
         </div>
     );
 };

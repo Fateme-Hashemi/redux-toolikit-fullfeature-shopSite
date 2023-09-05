@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import logo from "../../assets/images/logo.png";
 import Cart from "../cart/Cart";
-import { useSelector } from "react-redux";
-
-
+import { useSelector, useDispatch } from "react-redux";
+import { Avatar } from "@material-tailwind/react";
+import { Tooltip } from "@material-tailwind/react";
+import { logout } from "../../features/auth/authslice";
 
 const Navbar = () => {
 
@@ -12,6 +13,10 @@ const [open, setOpen] = React.useState(false);
  
 const handleOpen = () => setOpen(true);
 
+const user = useSelector((state) => state.user.user);
+const { name, image } = user;
+
+const dispatch = useDispatch();
   return (
     <>
       <div className="bg-black p-4 w-full flex justify-center items-center ">
@@ -74,20 +79,20 @@ const handleOpen = () => setOpen(true);
           </div>
           </div>
           <div className="flex flex-row items-center cursor-pointer pl-4">
-          
-              {/* <Avatar
+            {image && (
+              <Avatar
                 src={image}
                 alt="avatar"
                 size="sm"
                 className="mr-2"
-              ></Avatar> */}
-            
-            <div>
-          
+              ></Avatar>
+            )}
+            <div onClick={() => dispatch(logout())}>
+              <Tooltip content="Sign Out" placement="bottom">
                 <p className="font-inter text-sm font-medium tracking-normal leading-none">
-                  
+                  Hi {name.charAt("0").toUpperCase() + name.slice(1)}
                 </p>
-             
+              </Tooltip>
             </div>
           </div>
         </div>
