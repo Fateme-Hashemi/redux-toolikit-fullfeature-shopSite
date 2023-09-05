@@ -9,7 +9,7 @@ import {
     MenuList,
     MenuItem,
   } from "@material-tailwind/react";
-import { filterBySize, filterByColor, genderFilter, sortByPrice, filterProducts } from '../../features/Products/ProductsSlice';
+import { filterBySize, filterByColor, genderFilter, sortByPrice, filterProducts, sortByLowestPrice } from '../../features/Products/ProductsSlice';
 import Error from "../error/Error"
 
 
@@ -64,7 +64,15 @@ const FilteredProducts = () => {
                               onClick={()=> dispatch(sortByPrice())}>
                                 Highest Price
                             </Button>
-
+                            <Button
+                              color="gray"
+                              size="lg"
+                              variant="outlined"
+                              ripple={true}
+                              className="text-black hover:bg-gray-300 duration-300 ease-in-out mr-4"
+                              onClick={()=> dispatch(sortByLowestPrice())}>
+                                Lowest Price
+                            </Button>
                             <Menu>
                         <MenuHandler>
                             <Button

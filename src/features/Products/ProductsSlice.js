@@ -4,7 +4,7 @@ import { storeData } from "../../assets/data/dummyData";
  const productsReducer = createSlice({
     name: "products",
     initialState: {
-        filteredProducts: JSON.parse(localStorage.getItem('filteredProducts')) || storeData,
+        filteredProducts: JSON.parse(localStorage.getItem('filteredData')) || storeData,
         singleProduct : JSON.parse(localStorage.getItem("singleProduct")) || storeData,
         error: false,
     },
@@ -13,8 +13,9 @@ import { storeData } from "../../assets/data/dummyData";
             try{
                 const filter = storeData.filter((product)=> product.type === action.payload) //action.payload is our button like Hoodie or T-shirt 
                 state.filteredProducts = filter;
+                state.error = false;
                 const saveState = JSON.stringify(filter);
-                localStorage.setItem("filteredProducts", saveState)
+                localStorage.setItem("filteredData", saveState)
               
             }
             catch (err) {
@@ -114,9 +115,43 @@ import { storeData } from "../../assets/data/dummyData";
         return err;
       }
     },
+    sortByLowestPrice (state, action) {
+        try{
+            const lowPrice = state.filteredProducts.sort((a,b)=> 
+            b.price>a.price ? -1 :1)
+
+            state.error=false;
+            state.filteredProducts = lowPrice;
+            let count = lowPrice.length;
+            //if there is just one product
+            if(count > 1)  {
+               const noError = false;
+               state.error = noError;
+               if(!noError) {
+                   state.filteredProducts = lowPrice;
+                   const saveState = JSON.stringify(lowPrice)
+                   localStorage.setItem("filteredData", saveState)
+               }
+            }else {
+               state.error = true;
+               state.filteredProducts = []
+            }
+
+        }
+        catch(err) {
+            return err
+        }
+    }
   },
 })
 
 
 export default productsReducer.reducer;
-export const {filterProducts, singleProduct, genderFilter,sortByPrice, filterByColor, filterBySize} = productsReducer.actions;
+export const {filterProducts,
+     singleProduct, 
+     genderFilter,
+     sortByPrice, 
+     filterByColor, 
+     filterBySize,
+     sortByLowestPrice
+    } = productsReducer.actions;
