@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { storeData } from "../../assets/data/dummyData";
-
+import { useHistory } from "react-router-dom";
  const productsReducer = createSlice({
     name: "products",
     initialState: {
@@ -29,25 +29,28 @@ import { storeData } from "../../assets/data/dummyData";
             localStorage.setItem("singleProduct", saveState)
             console.log(singleCard)
         },
-        genderFilter (state, action) {
-            try{
-                const gender = state.filteredProducts.filter((product)=> product.gender === action.payload);
+        genderFilter(state, action) {
+            try {
+              const gender = state.filteredProducts.filter(
+                (product) => product.gender === action.payload
+              );
+              state.error = false;
+              state.filteredProducts = gender;
+              const oneGender = gender.length > 0;
+              if (oneGender) {
                 state.error = false;
-                state.filteredProducts = gender;
-                const oneGender = gender.length > 0;
-                if (oneGender) {
-                    state.error = false;
-                    const saveState = JSON.stringify(gender);
-                    localStorage.setItem("filteredData", saveState)
-                }else {
-                    state.error = true;
-                    state.filteredProducts = [];
-                }
+                const saveState = JSON.stringify(gender);
+                localStorage.setItem('filteredData', saveState);
+             
+              } else {
+                state.error = true;
+                state.filteredProducts = [];
+              }
+            } catch (err) {
+              return err;
             }
-            catch(err) {
-                return err
-            }
-        },
+          },
+          
         sortByPrice (state, action) {
 
             try{
